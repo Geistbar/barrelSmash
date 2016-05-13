@@ -16,6 +16,18 @@ boolean[item] barrels = $items[little firkin, normal barrel, big tun, weathered 
 boolean[item] rares = $items[bottle of Amontillado, barrel-aged martini, barrel gun, barrel cracker, barrel pickle, tiny barrel, cute mushroom, vibrating mushroom, barrel beryl, water log];
 
 /*******************************************************
+*					barrelSum()
+*	Returns the total number of barrels you have.
+/*******************************************************/
+int barrelSum()
+{
+	int sum;
+	foreach barrel in barrels
+		sum += item_amount(barrel);
+	return sum;
+}
+
+/*******************************************************
 *					smashBarrels(item barrel)
 *	Visits the barrel smashing url once for every
 *	argument barrel you have.
@@ -34,9 +46,35 @@ void smashBarrels(item barrel)
 	}
 }
 
+/*******************************************************
+*					smash100()
+*	Uses the "smash 100" button while possible.
+/*******************************************************/
+void smash100()
+{
+	int sum = barrelSum();
+	while (sum >= 100)
+	{
+		item bar;
+		while (bar == $item[none])
+		{
+			foreach barrel in barrels
+			{
+				if (item_amount(barrel) > 0)
+					bar = barrel;
+			}
+		}
+		int id = to_int(bar);
+		visit_url("inv_use.php?pwd&whichitem=" + to_string(id) + "&choice=1");	// Start party
+		visit_url("choice.php?pwd&whichchoice=1101&option=2");
+		sum = barrelSum();
+	}
+}
+
 void main()
 {
 	int[item] invStart = get_inventory();		// For data purposes
+	smash100();
 	// Go through each barrel and call smashBarrels() with it
 	foreach barrel in barrels
 	{
