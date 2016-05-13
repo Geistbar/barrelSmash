@@ -74,7 +74,7 @@ void smash100()
 void main()
 {
 	int[item] invStart = get_inventory();		// For data purposes
-	smash100();
+	//smash100();
 	// Go through each barrel and call smashBarrels() with it
 	foreach barrel in barrels
 	{
